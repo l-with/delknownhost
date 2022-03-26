@@ -1,2 +1,10 @@
 #!/bin/bash
-sed -i $1d ~/.ssh/known_hosts
+if [ -z $1 ]; then
+    echo "usage: $0 <linenumber>"
+    exit -1
+fi
+_host=$(sed $1!d ~/.ssh/known_hosts | cut -d " " -f 1)
+if [ -z $_host ]; then
+    echo "no host found at linenumber '$1'"
+fi
+sed -i .orig "/$_host/d" ~/.ssh/known_hosts
